@@ -1,9 +1,18 @@
 package eu.przysucha.placesnearby.model;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.persistence.*;
+
+@Entity
+@Table(name="places")
 public class PlaceDTO {
 
-    //private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
     private String name;
     private String formattedAddress;
     private Boolean openNow;
@@ -11,6 +20,10 @@ public class PlaceDTO {
     private Double lat;
     private Double lon;
 
+    public PlaceDTO() {
+    }
+
+    @Autowired
     public PlaceDTO(String name, String formattedAddress, Boolean openNow, Double rating, Double lat, Double lon) {
         this.name = name;
         this.formattedAddress = formattedAddress;
@@ -20,19 +33,25 @@ public class PlaceDTO {
         this.lon = lon;
     }
 
-    public PlaceDTO() {
-    }
-
     @Override
     public String toString() {
         return "PlaceDTO{" +
-                "name='" + name + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 ", formattedAddress='" + formattedAddress + '\'' +
                 ", openNow=" + openNow +
                 ", rating=" + rating +
                 ", lat=" + lat +
                 ", lon=" + lon +
                 '}';
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -51,11 +70,11 @@ public class PlaceDTO {
         this.formattedAddress = formattedAddress;
     }
 
-    public boolean isOpenNow() {
+    public Boolean getOpenNow() {
         return openNow;
     }
 
-    public void setOpenNow(boolean openNow) {
+    public void setOpenNow(Boolean openNow) {
         this.openNow = openNow;
     }
 
