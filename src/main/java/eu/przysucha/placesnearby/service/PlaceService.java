@@ -1,18 +1,16 @@
 package eu.przysucha.placesnearby.service;
 
-import eu.przysucha.placesnearby.controller.PlaceController;
+import eu.przysucha.placesnearby.aspect.PlaceAddToFavListAspectAnnotation;
+import eu.przysucha.placesnearby.aspect.PlaceListGetFromApiAspectAnnotation;
 import eu.przysucha.placesnearby.model.*;
 import eu.przysucha.placesnearby.repo.CategoryRepository;
 import eu.przysucha.placesnearby.repo.PlaceDtoRepository;
 import eu.przysucha.placesnearby.repo.UserRepository;
-import eu.przysucha.placesnearby.security.JwtFilter;
 import eu.przysucha.placesnearby.security.JwtUtilities;
 import org.apache.http.client.utils.URIBuilder;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 import org.modelmapper.convention.MatchingStrategies;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -31,14 +29,13 @@ public class PlaceService {
     private String lat;
     private String lon;
     private String type;
-    private Logger logger = LoggerFactory.getLogger(PlaceController.class);
 
     private static final String GOOGLE_MAPS_BASE_API_URL = "https://maps.googleapis.com/maps/api/place/textsearch/json?";
 
-    private PlaceDtoRepository placeDtoRepository;
-    private CategoryRepository categoryRepository;
-    private UserRepository userRepository;
-    private JwtUtilities jwtUtilities;
+    private final PlaceDtoRepository placeDtoRepository;
+    private final CategoryRepository categoryRepository;
+    private final UserRepository userRepository;
+    private final JwtUtilities jwtUtilities;
 
     @Autowired
     public PlaceService(PlaceDtoRepository placeDtoRepository, CategoryRepository categoryRepository, UserRepository userRepository, JwtUtilities jwtUtilities) {
@@ -49,12 +46,13 @@ public class PlaceService {
     }
 
 
+    @PlaceAddToFavListAspectAnnotation
     public void addFavouritePlace(PlaceDto placeDto, Map<String, String> headers) {
 
-        String username = jwtUtilities.getUserNameFromJwtToken(headers.get("authorization").substring(7, headers.get("authorization").length()));
+        String username = jwtUtilities.getUserNameFromJwtToken(headers.get("authorization").substring(7));
         User user = userRepository.findByUsername(username).get();
         user.getFavouritesPlaces().add(placeDto);
-        if(!this.ifExistsPlaceDto(placeDto.getName())) {
+        if (!this.ifExistsPlaceDto(placeDto.getName())) {
             placeDtoRepository.save(placeDto);
             userRepository.save(user);
         }
@@ -62,6 +60,7 @@ public class PlaceService {
     }
 
 
+    @PlaceListGetFromApiAspectAnnotation
     public List<PlaceDto> getPlaceListFromApi(String lat, String lon, String type) {
 
         this.lat = lat;
@@ -75,8 +74,6 @@ public class PlaceService {
         data.getPlaces().forEach(v -> {
             list.add(modelMapper(category).map(v, PlaceDto.class));
         });
-
-        logger.info("Got list of " + type + "s");
         return list;
 
     }
@@ -114,8 +111,6 @@ public class PlaceService {
                 map().setRating(source.getRating());
                 map().setLat(source.getGeometry().getLocation().getLat());
                 map().setLon(source.getGeometry().getLocation().getLng());
-                System.out.println("KATEGORIA");
-                System.out.println(category);
                 map().setCategory(category);
             }
         });
@@ -142,33 +137,21 @@ public class PlaceService {
     }
 
     public Set<PlaceDto> getFavouritePlaceList(Map<String, String> headers) {
-        String username = jwtUtilities.getUserNameFromJwtToken(headers.get("authorization").substring(7, headers.get("authorization").length()));
+
+        String username = jwtUtilities.getUserNameFromJwtToken(headers.get("authorization").substring(7));
         User user = userRepository.findByUsername(username).get();
         return user.getFavouritesPlaces();
 
     }
 
     public void deletePlaceFromFavouriteList(PlaceDto placeDto, Map<String, String> headers) {
-        String username = jwtUtilities.getUserNameFromJwtToken(headers.get("authorization").substring(7, headers.get("authorization").length()));
+
+        String username = jwtUtilities.getUserNameFromJwtToken(headers.get("authorization").substring(7));
         User user = userRepository.findByUsername(username).get();
-
-
-        System.out.println("placedto");
-        System.out.println(placeDto);
-
-        System.out.println("-------------");
-        System.out.println("lista");
-        System.out.println(user.getFavouritesPlaces());
-        System.out.println("-------------");
-        Set <PlaceDto> lista = user.getFavouritesPlaces();
+        Set<PlaceDto> lista = user.getFavouritesPlaces();
         lista.remove(placeDto);
-
-        System.out.println("lista po suuenciu");
-        System.out.println(user.getFavouritesPlaces());
-        System.out.println(lista);
-        System.out.println("-------------");
-         userRepository.save(user);
-       placeDtoRepository.delete(placeDto);
+        userRepository.save(user);
+        placeDtoRepository.delete(placeDto);
 
 
     }

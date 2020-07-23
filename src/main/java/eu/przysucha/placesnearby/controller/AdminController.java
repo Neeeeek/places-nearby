@@ -16,25 +16,19 @@ import java.util.Map;
 @RequestMapping("/admin")
 public class AdminController {
 
-    CategoryService categoryService;
+   private final CategoryService categoryService;
 
     @Autowired
     public AdminController(CategoryService categoryService) {
         this.categoryService = categoryService;
     }
 
-
     @PostMapping("/categories/add")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity addCategory(@RequestBody Category category, @RequestHeader Map<String, String> headers) {
 
-        headers.forEach((key, value) -> {
-            System.out.println(String.format("Header '%s' = %s", key, value));
-        });
         category.setVisibility(false);
         categoryService.addCategory(category);
-
-
         return new ResponseEntity(HttpStatus.OK);
     }
 
@@ -42,10 +36,6 @@ public class AdminController {
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/categories/{id}")
     public ResponseEntity<?> changeVisibility(@PathVariable("id")  long id) {
-
-
-        System.out.println("id do publish:" + id);
-        //Optional<Quiz>  quiz = quizService.getQuiz(id);
 
         categoryService.changeVisibility(id);
         return new ResponseEntity<>("ok", HttpStatus.OK);

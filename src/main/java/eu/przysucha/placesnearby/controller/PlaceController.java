@@ -30,13 +30,6 @@ public class PlaceController {
     }
 
 
-    @GetMapping
-    public String get() {
-        return "map";
-    }
-
-
-
 
     @GetMapping("/categories")
     public ResponseEntity<List<Category>> getCategories() {
@@ -48,28 +41,10 @@ public class PlaceController {
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public List<PlaceDto> getPlacesList(@RequestBody FindRequest findRequest, @RequestHeader Map<String, String> headers) {
 
-        headers.forEach((key, value) -> {
-            System.out.println(String.format("Header '%s' = %s", key, value));
-        });
-
-        System.out.println(findRequest.getLat() + findRequest.getLon() + findRequest.getType());
-//        this.lat = lat;
-//        this.lon = lon;
-//        this.type = type;
 
         return placeService.getPlaceListFromApi(findRequest.getLat(), findRequest.getLon(), findRequest.getType());
-        //return placeList;
+
     }
-//
-//    @PostMapping
-//    public ResponseEntity<String> listAllHeaders(
-//            @RequestHeader Map<String, String> headers) {
-//        headers.forEach((key, value) -> {
-//            System.out.println(String.format("Header '%s' = %s", key, value));
-//        });
-//
-//        return new ResponseEntity<String>(
-//                String.format("Listed %d headers", headers.size()), HttpStatus.OK);
-//    }
+
 
 }

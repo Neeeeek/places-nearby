@@ -1,5 +1,7 @@
 package eu.przysucha.placesnearby.service;
 
+import eu.przysucha.placesnearby.aspect.CategoryAddAspectAnnotation;
+import eu.przysucha.placesnearby.aspect.CategoryVisibilityChangeAspectAnnotation;
 import eu.przysucha.placesnearby.model.Category;
 import eu.przysucha.placesnearby.repo.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +13,7 @@ import java.util.Optional;
 @Service
 public class CategoryService {
 
-    private CategoryRepository categoryRepository;
+    private final CategoryRepository categoryRepository;
 
     @Autowired
     public CategoryService(CategoryRepository categoryRepository) {
@@ -22,12 +24,14 @@ public class CategoryService {
         return categoryRepository.findAll();
     }
 
+    @CategoryAddAspectAnnotation
     public void addCategory (Category category) {
 
         categoryRepository.save(category);
 
     }
 
+    @CategoryVisibilityChangeAspectAnnotation
     public void changeVisibility(long id) {
         Optional<Category> category = categoryRepository.findById(id);
         category.get().setVisibility(!category.get().getVisibility());

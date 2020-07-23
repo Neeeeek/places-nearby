@@ -17,6 +17,7 @@ import eu.przysucha.placesnearby.payload.SignupRequest;
 import eu.przysucha.placesnearby.repo.RoleRepository;
 import eu.przysucha.placesnearby.repo.UserRepository;
 import eu.przysucha.placesnearby.security.JwtUtilities;
+import eu.przysucha.placesnearby.aspect.UserSignupAspectAnnotation;
 import eu.przysucha.placesnearby.service.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -73,6 +74,7 @@ public class AuthController {
                 roles));
     }
 
+    @UserSignupAspectAnnotation
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
@@ -87,7 +89,6 @@ public class AuthController {
                     .body(new MessageResponse("Error: Email is already in use!"));
         }
 
-        // Create new user's account
         User user = new User(signUpRequest.getUsername(),
                 signUpRequest.getEmail(),
                 encoder.encode(signUpRequest.getPassword()));
