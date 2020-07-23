@@ -18,15 +18,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class JwtFilter extends OncePerRequestFilter {
-
+    @Autowired
     private JwtUtilities jwtUtilities;
+    @Autowired
     private UserDetailsServiceImpl userDetailsService;
 
-    @Autowired
-    public JwtFilter(JwtUtilities jwtUtilities, UserDetailsServiceImpl userDetailsService) {
-        this.jwtUtilities = jwtUtilities;
-        this.userDetailsService = userDetailsService;
-    }
 
     public JwtFilter() {
     }
@@ -38,6 +34,7 @@ public class JwtFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         try {
             String jwt = parseJwt(request);
+            System.out.println("jwt filter->>" +jwt);
             if (jwt != null && jwtUtilities.validateJwtToken(jwt)) {
                 String username = jwtUtilities.getUserNameFromJwtToken(jwt);
 
@@ -55,7 +52,7 @@ public class JwtFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    private String parseJwt(HttpServletRequest request) {
+    public String parseJwt(HttpServletRequest request) {
         String headerAuth = request.getHeader("Authorization");
 
         if (StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer ")) {

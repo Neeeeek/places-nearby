@@ -11,7 +11,7 @@ import java.util.List;
 
 @CrossOrigin(origins ="*")
 @RestController
-@RequestMapping("/api/test")
+@RequestMapping("/test")
 public class TestController {
     @GetMapping("/all")
     public String allAccess() {
@@ -35,6 +35,7 @@ public class TestController {
         ArrayList<String> list = new ArrayList<String>();
         list.add("Pizzeria");
         list.add("Sushi");
+        list.add("Hej");
         return list;
     }
 }

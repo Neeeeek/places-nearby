@@ -44,8 +44,6 @@ public class Place {
     private String id;
     @JsonProperty("name")
     private String name;
-    @JsonProperty("opening_hours")
-    private OpeningHours openingHours;
     @JsonProperty("place_id")
     private String placeId;
     @JsonProperty("rating")
@@ -60,6 +58,26 @@ public class Place {
     private Integer priceLevel;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+
+    @Override
+    public String toString() {
+        return "Place{" +
+                "businessStatus='" + businessStatus + '\'' +
+                ", formattedAddress='" + formattedAddress + '\'' +
+                ", geometry=" + geometry +
+                ", icon='" + icon + '\'' +
+                ", id='" + id + '\'' +
+                ", name='" + name + '\'' +
+
+                ", placeId='" + placeId + '\'' +
+                ", rating=" + rating +
+                ", reference='" + reference + '\'' +
+                ", types=" + types +
+                ", userRatingsTotal=" + userRatingsTotal +
+                ", priceLevel=" + priceLevel +
+                ", additionalProperties=" + additionalProperties +
+                '}';
+    }
 
     @JsonProperty("business_status")
     public String getBusinessStatus() {
@@ -119,16 +137,6 @@ public class Place {
     @JsonProperty("name")
     public void setName(String name) {
         this.name = name;
-    }
-
-    @JsonProperty("opening_hours")
-    public OpeningHours getOpeningHours() {
-        return openingHours;
-    }
-
-    @JsonProperty("opening_hours")
-    public void setOpeningHours(OpeningHours openingHours) {
-        this.openingHours = openingHours;
     }
 
     @JsonProperty("place_id")

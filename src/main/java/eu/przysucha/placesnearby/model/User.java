@@ -38,6 +38,18 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
+
+    @OneToMany
+    private Set<PlaceDto> favouritesPlaces = new HashSet<>();
+
+    public Set<PlaceDto> getFavouritesPlaces() {
+        return favouritesPlaces;
+    }
+
+    public void setFavouritesPlaces(Set<PlaceDto> favouritesPlaces) {
+        this.favouritesPlaces = favouritesPlaces;
+    }
+
     public User() {
     }
 
