@@ -54,7 +54,7 @@ public class PlaceDto {
     }
 
     @Autowired
-    public PlaceDto(String name, String formattedAddress, Boolean openNow, Double rating, Double lat, Double lon) {
+    public PlaceDto(String name, String formattedAddress, Double rating, Double lat, Double lon) {
         this.name = name;
         this.formattedAddress = formattedAddress;
         this.rating = rating;

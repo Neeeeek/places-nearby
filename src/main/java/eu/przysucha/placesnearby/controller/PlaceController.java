@@ -2,7 +2,7 @@ package eu.przysucha.placesnearby.controller;
 
 import eu.przysucha.placesnearby.model.Category;
 import eu.przysucha.placesnearby.model.PlaceDto;
-import eu.przysucha.placesnearby.payload.FindRequest;
+import eu.przysucha.placesnearby.model.payload.FindRequest;
 import eu.przysucha.placesnearby.service.CategoryService;
 import eu.przysucha.placesnearby.service.PlaceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,6 @@ public class PlaceController {
     }
 
 
-
     @GetMapping("/categories")
     public ResponseEntity<List<Category>> getCategories() {
         return new ResponseEntity<>(categoryService.getAllCategories(), HttpStatus.OK);
@@ -40,7 +39,6 @@ public class PlaceController {
     @PostMapping
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public List<PlaceDto> getPlacesList(@RequestBody FindRequest findRequest, @RequestHeader Map<String, String> headers) {
-
 
         return placeService.getPlaceListFromApi(findRequest.getLat(), findRequest.getLon(), findRequest.getType());
 

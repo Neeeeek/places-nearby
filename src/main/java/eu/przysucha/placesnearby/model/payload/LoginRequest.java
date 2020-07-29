@@ -1,4 +1,4 @@
-package eu.przysucha.placesnearby.payload;
+package eu.przysucha.placesnearby.model.payload;
 
 import javax.validation.constraints.NotBlank;
 

@@ -7,13 +7,14 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import eu.przysucha.placesnearby.aspect.UserLoginAspectAnnotation;
 import eu.przysucha.placesnearby.model.Role;
 import eu.przysucha.placesnearby.model.RoleEnum;
 import eu.przysucha.placesnearby.model.User;
-import eu.przysucha.placesnearby.payload.JwtResponse;
-import eu.przysucha.placesnearby.payload.LoginRequest;
-import eu.przysucha.placesnearby.payload.MessageResponse;
-import eu.przysucha.placesnearby.payload.SignupRequest;
+import eu.przysucha.placesnearby.model.payload.AuthResponse;
+import eu.przysucha.placesnearby.model.payload.LoginRequest;
+import eu.przysucha.placesnearby.model.payload.MessageResponse;
+import eu.przysucha.placesnearby.model.payload.SignupRequest;
 import eu.przysucha.placesnearby.repo.RoleRepository;
 import eu.przysucha.placesnearby.repo.UserRepository;
 import eu.przysucha.placesnearby.security.JwtUtilities;
@@ -53,6 +54,7 @@ public class AuthController {
         this.jwtUtilities = jwtUtilities;
     }
 
+    @UserLoginAspectAnnotation
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
@@ -67,7 +69,7 @@ public class AuthController {
                 .map(item -> item.getAuthority())
                 .collect(Collectors.toList());
 
-        return ResponseEntity.ok(new JwtResponse(jwt,
+        return ResponseEntity.ok(new AuthResponse(jwt,
                 userDetails.getId(),
                 userDetails.getUsername(),
                 userDetails.getEmail(),

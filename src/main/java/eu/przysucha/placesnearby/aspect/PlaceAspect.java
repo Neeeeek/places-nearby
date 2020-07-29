@@ -14,11 +14,6 @@ public class PlaceAspect {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Before("@annotation(eu.przysucha.placesnearby.aspect.UserSignupAspectAnnotation)")
-    void userSignup() {
-        logger.info("New user is trying to sign up.");
-    }
-
     @After("@annotation(eu.przysucha.placesnearby.aspect.PlaceAddToFavListAspectAnnotation)")
     void placeAddToFavouriteList() {
         logger.info("New place has been added to someone's favourite list.");
